@@ -362,7 +362,7 @@ const ReadinessAssessmentForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // ⚠️ REPLACE THIS URL WITH YOUR GOOGLE APPS SCRIPT WEB APP URL
-  const GOOGLE_SCRIPT_URL = "YOUR_WEB_APP_URL_HEREhttps://script.google.com/macros/s/AKfycbzJ4cAleKG2UWmDo0n-llqKMvtdL4byiyQUUOVhGKHhk9Ck85GMW-CeRIsyb-tj-cNJ/exec";
+  const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzJ4cAleKG2UWmDo0n-llqKMvtdL4byiyQUUOVhGKHhk9Ck85GMW-CeRIsyb-tj-cNJ/exec";
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
