@@ -20,8 +20,8 @@ import {
 
 /**
  * AVENTEQAI - ENTERPRISE AI INFRASTRUCTURE
- * Version: 4.2 - Stable Navigation
- * Updates: Removed pushState to fix SecurityError in preview environments.
+ * Version: 5.0 - Google Sheets Integration
+ * Updates: Connected Lead Magnet Form to Google Apps Script Webhook.
  */
 
 // --- TYPES ---
@@ -75,10 +75,8 @@ const usePageMetadata = (page: PageRoute) => {
 
     const data = metadata[page];
 
-    // Update Title
     document.title = data.title;
 
-    // Update Meta Description (Safe update)
     try {
       let metaDesc = document.querySelector("meta[name='description']");
       if (!metaDesc) {
@@ -87,9 +85,7 @@ const usePageMetadata = (page: PageRoute) => {
         document.head.appendChild(metaDesc);
       }
       metaDesc.setAttribute('content', data.desc);
-    } catch (e) {
-      // Ignore errors in restricted environments
-    }
+    } catch (e) {}
 
     window.scrollTo(0, 0);
   }, [page]);
@@ -191,12 +187,14 @@ const Card = ({
   </motion.div>
 );
 
-const ButtonPrimary = ({ onClick, text = "[ Start Building ]", fullWidth = false }: { onClick: () => void; text?: string; fullWidth?: boolean }) => (
+const ButtonPrimary = ({ onClick, text = "[ Start Building ]", fullWidth = false, type = "button", disabled = false }: { onClick?: () => void; text?: string; fullWidth?: boolean; type?: "button" | "submit"; disabled?: boolean }) => (
   <motion.button 
-    whileHover={{ scale: 1.02 }}
-    whileTap={{ scale: 0.98 }}
+    whileHover={{ scale: disabled ? 1 : 1.02 }}
+    whileTap={{ scale: disabled ? 1 : 0.98 }}
     onClick={onClick}
-    className={`bg-indigo-600 text-white px-6 py-3 rounded-full font-medium text-sm hover:bg-indigo-700 shadow-sm shadow-indigo-200 transition-colors inline-flex items-center justify-center gap-2 ${fullWidth ? 'w-full' : ''}`}
+    type={type}
+    disabled={disabled}
+    className={`bg-indigo-600 text-white px-6 py-3 rounded-full font-medium text-sm hover:bg-indigo-700 shadow-sm shadow-indigo-200 transition-colors inline-flex items-center justify-center gap-2 ${fullWidth ? 'w-full' : ''} ${disabled ? 'opacity-70 cursor-not-allowed' : ''}`}
   >
     {text} <ArrowRight className="w-4 h-4" />
   </motion.button>
@@ -263,8 +261,7 @@ const Navbar: React.FC<NavProps> = ({ currentPage, navigate }) => {
   );
 };
 
-// --- VISUAL COMPONENTS FOR HERO SECTIONS ---
-
+// --- VISUAL COMPONENTS ---
 const TerminalVisual = () => (
   <motion.div variants={fadeInUp} className="hidden md:block bg-zinc-900 rounded-xl p-6 shadow-2xl font-mono text-xs text-zinc-300 border border-zinc-800">
       <div className="flex gap-2 mb-4 border-b border-zinc-800 pb-4">
@@ -298,7 +295,6 @@ const FinanceVisual = () => (
        </div>
        <span className="text-xs font-mono text-emerald-600 bg-emerald-50 px-2 py-1 rounded">+12.4%</span> 
     </div>
-    
     <div className="flex items-end gap-3 h-32 mb-6 px-2">
        {[35, 55, 45, 70, 50, 85, 65].map((h, i) => (
           <div key={i} className="w-full bg-zinc-50 rounded-t-sm relative group overflow-hidden">
@@ -311,7 +307,6 @@ const FinanceVisual = () => (
           </div>
        ))}
     </div>
-
     <div className="space-y-3 pt-4 border-t border-zinc-100">
         <div className="flex justify-between items-center text-xs">
             <span className="text-zinc-500">Confidence Score</span>
@@ -335,10 +330,8 @@ const LogisticsVisual = () => (
         <h4 className="text-sm font-bold flex items-center gap-2"><Layers className="w-4 h-4 text-indigo-500" /> Global Logistics</h4>
         <span className="text-[10px] font-mono bg-indigo-500/10 text-indigo-400 px-2 py-1 rounded">LIVE_TRACKING</span>
      </div>
-     
      <div className="space-y-6 relative pl-2">
         <div className="absolute left-[13px] top-2 bottom-2 w-0.5 bg-zinc-800"></div>
-        
         {[
            { city: 'Singapore Hub', status: 'Departed', time: '04:00Z', active: false },
            { city: 'Ocean Transit', status: 'In Progress', time: 'Active', active: true },
@@ -356,7 +349,6 @@ const LogisticsVisual = () => (
            </div>
         ))}
      </div>
-     
      <div className="mt-6 pt-4 border-t border-zinc-800 flex justify-between items-center text-[10px] text-zinc-500 font-mono">
         <span>ID: #SHP-8829</span>
         <span className="flex items-center gap-1 text-emerald-500"><TrendingUp className="w-3 h-3" /> ON TIME</span>
@@ -367,16 +359,38 @@ const LogisticsVisual = () => (
 // --- LEAD MAGNET FORM ---
 const ReadinessAssessmentForm = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // ⚠️ REPLACE THIS URL WITH YOUR GOOGLE APPS SCRIPT WEB APP URL
+  const GOOGLE_SCRIPT_URL = "YOUR_WEB_APP_URL_HEREhttps://script.google.com/macros/s/AKfycbzJ4cAleKG2UWmDo0n-llqKMvtdL4byiyQUUOVhGKHhk9Ck85GMW-CeRIsyb-tj-cNJ/exec";
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setIsSubmitted(true);
+    setIsSubmitting(true);
+
+    const formData = new FormData(e.currentTarget);
+    
+    try {
+      await fetch(GOOGLE_SCRIPT_URL, {
+        method: 'POST',
+        body: formData,
+        mode: 'no-cors' // Crucial for Google Apps Script to work from client-side
+      });
+      // Since mode is no-cors, we can't read response, so we assume success if no error thrown
+      setIsSubmitted(true);
+    } catch (error) {
+      console.error("Form submission error", error);
+      alert("Something went wrong. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
-  const InputField = ({ label, type = "text", placeholder, required = false }: any) => (
+  const InputField = ({ label, name, type = "text", placeholder, required = false }: any) => (
     <div className="mb-4">
       <label className="block text-xs font-semibold text-zinc-500 mb-1 font-mono uppercase tracking-wide">{label}</label>
       <input 
+        name={name}
         type={type} 
         required={required}
         className="w-full bg-white border border-zinc-300 rounded-md p-3 text-zinc-900 placeholder:text-zinc-400 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-shadow" 
@@ -385,12 +399,12 @@ const ReadinessAssessmentForm = () => {
     </div>
   );
 
-  const SelectField = ({ label, options }: any) => (
+  const SelectField = ({ label, name, options }: any) => (
     <div className="mb-4">
       <label className="block text-xs font-semibold text-zinc-500 mb-1 font-mono uppercase tracking-wide">{label}</label>
       <div className="relative">
-        <select className="w-full bg-white border border-zinc-300 rounded-md p-3 pr-10 text-zinc-900 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-shadow appearance-none cursor-pointer">
-          {options.map((opt: string) => <option key={opt}>{opt}</option>)}
+        <select name={name} className="w-full bg-white border border-zinc-300 rounded-md p-3 pr-10 text-zinc-900 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-shadow appearance-none cursor-pointer">
+          {options.map((opt: string) => <option key={opt} value={opt}>{opt}</option>)}
         </select>
         <div className="absolute inset-y-0 right-0 flex items-center px-3 pointer-events-none text-zinc-500">
           <ChevronRight className="w-4 h-4 rotate-90" />
@@ -399,10 +413,11 @@ const ReadinessAssessmentForm = () => {
     </div>
   );
 
-  const TextAreaField = ({ label, placeholder, rows = 3 }: any) => (
+  const TextAreaField = ({ label, name, placeholder, rows = 3 }: any) => (
     <div className="mb-6">
       <label className="block text-xs font-semibold text-zinc-500 mb-1 font-mono uppercase tracking-wide">{label}</label>
       <textarea 
+        name={name}
         rows={rows}
         className="w-full bg-white border border-zinc-300 rounded-md p-3 text-zinc-900 placeholder:text-zinc-400 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-shadow" 
         placeholder={placeholder} 
@@ -442,48 +457,53 @@ const ReadinessAssessmentForm = () => {
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <InputField label="Name" placeholder="e.g. Alex Morgan" required />
-          <InputField label="Work Email" type="email" placeholder="alex@company.com" required />
+          <InputField label="Name" name="Name" placeholder="e.g. Alex Morgan" required />
+          <InputField label="Work Email" name="Email" type="email" placeholder="alex@company.com" required />
         </div>
-        <InputField label="Company" placeholder="Company Name Ltd." required />
+        <InputField label="Company" name="Company" placeholder="Company Name Ltd." required />
 
-        {/* Q1: Business Function */}
         <SelectField 
           label="Target Architecture" 
+          name="Target_Architecture"
           options={['Finance', 'Logistics & Supply Chain', 'Operations', 'Full Stack / Multiple', 'Not sure']} 
         />
         
-        {/* Q2: Primary Objective */}
         <SelectField 
           label="Primary Objective" 
+          name="Primary_Objective"
           options={['Improve efficiency / automation', 'Better forecasting', 'Cost reduction', 'Decision support', 'Visibility & Control']} 
         />
 
-        {/* Q4: Data Maturity */}
         <SelectField 
           label="Current Data Maturity" 
+          name="Data_Maturity"
           options={['Fragmented / Siloed', 'Partially Structured', 'Centralized / Warehouse', 'Unsure']} 
         />
 
-        {/* Q5: AI Experience */}
         <SelectField 
           label="AI Experience Level" 
+          name="AI_Experience"
           options={['No prior experience', 'Limited experimentation', 'Active production use']} 
         />
 
-        {/* Q6: Time Horizon */}
         <SelectField 
           label="Deployment Timeline" 
+          name="Timeline"
           options={['Immediately', '3–6 Months', 'Exploratory']} 
         />
 
-        {/* Q7: Open Text */}
         <TextAreaField 
            label="Success Criteria"
+           name="Success_Criteria"
            placeholder="Describe your ideal outcome..."
         />
 
-        <ButtonPrimary onClick={() => {}} text="[ Request Assessment ]" fullWidth />
+        <ButtonPrimary 
+          type="submit" 
+          text={isSubmitting ? "[ Transmitting... ]" : "[ Request Assessment ]"} 
+          fullWidth 
+          disabled={isSubmitting} 
+        />
         <p className="text-[10px] text-center text-zinc-400 mt-4 font-mono">
           NO OBLIGATION. SECURE TRANSMISSION.
         </p>
@@ -555,7 +575,6 @@ const Footer: React.FC<NavProps> = ({ navigate }) => (
         </ul>
       </div>
       
-      {/* Added Missing "About" Link Column/Section */}
       <div className="col-span-1 md:col-span-4 border-t border-zinc-100 pt-8 flex flex-col md:flex-row gap-6 justify-between items-center text-xs text-zinc-400">
          <div className="flex gap-6">
             <button onClick={() => navigate('home')} className="hover:text-indigo-600 transition-colors">About</button>
@@ -1170,12 +1189,31 @@ export default function App() {
   usePageMetadata(currentPage); // UPDATED HOOK
 
   // UPDATED NAVIGATION LOGIC FOR CLEAN URLs
-  // Removed popstate listener causing SecurityError
+  useEffect(() => {
+    const handlePopState = (event: PopStateEvent) => {
+      if (event.state && event.state.page) {
+        setCurrentPage(event.state.page);
+      } else {
+        setCurrentPage('home');
+      }
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
 
   const navigate = (page: PageRoute) => {
     setCurrentPage(page);
     window.scrollTo(0, 0);
-    // Removed pushState causing SecurityError
+    
+    // Simulate Next.js Router Push
+    let path = '/';
+    if (page !== 'home') {
+       if (page === 'contact') path = '/contact';
+       else if (page === 'privacy') path = '/legal/privacy';
+       else if (page === 'terms') path = '/legal/terms';
+       else path = `/solutions/${page}`;
+    }
+    window.history.pushState({ page }, '', path);
   };
 
   return (
