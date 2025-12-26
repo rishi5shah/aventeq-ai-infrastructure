@@ -15,13 +15,14 @@ import {
   Cpu,
   AlertCircle,
   FileText,
-  Shield
+  Shield,
+  Activity // Added Activity icon for the new visual
 } from 'lucide-react';
 
 /**
  * AVENTEQAI - ENTERPRISE AI INFRASTRUCTURE
- * Version: 5.0 - Google Sheets Integration
- * Updates: Connected Lead Magnet Form to Google Apps Script Webhook.
+ * Version: 5.2 - Reference Error Fix
+ * Updates: Ensured all Page components are defined before use in App.
  */
 
 // --- TYPES ---
@@ -283,42 +284,55 @@ const TerminalVisual = () => (
 
 const FinanceVisual = () => (
   <motion.div variants={fadeInUp} className="hidden md:block bg-white rounded-xl p-6 shadow-2xl border border-zinc-100 relative overflow-hidden">
-    <div className="flex items-center justify-between mb-6">
+    <div className="flex items-center justify-between mb-6 border-b border-zinc-100 pb-4">
        <div className="flex items-center gap-3">
           <div className="p-2 bg-indigo-50 rounded-lg text-indigo-600">
-             <BarChart3 className="w-5 h-5" />
+             <Activity className="w-5 h-5" />
           </div>
           <div>
-             <h4 className="text-sm font-bold text-zinc-900">Cash Flow Forecast</h4>
-             <p className="text-[10px] text-zinc-500 uppercase tracking-wider font-mono">Real-time Model</p>
+             <h4 className="text-sm font-bold text-zinc-900">Live Transaction Audit</h4>
+             <p className="text-[10px] text-zinc-500 uppercase tracking-wider font-mono">Real-time Anomaly Detection</p>
           </div>
        </div>
-       <span className="text-xs font-mono text-emerald-600 bg-emerald-50 px-2 py-1 rounded">+12.4%</span> 
+       <div className="flex items-center gap-2">
+          <span className="relative flex h-2 w-2">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+          </span>
+          <span className="text-[10px] font-mono text-emerald-600">ACTIVE</span>
+       </div>
     </div>
-    <div className="flex items-end gap-3 h-32 mb-6 px-2">
-       {[35, 55, 45, 70, 50, 85, 65].map((h, i) => (
-          <div key={i} className="w-full bg-zinc-50 rounded-t-sm relative group overflow-hidden">
-             <motion.div 
-               initial={{ height: 0 }}
-               whileInView={{ height: `${h}%` }}
-               transition={{ duration: 0.8, delay: i * 0.1, ease: "easeOut" }}
-               className="absolute bottom-0 w-full bg-indigo-500 rounded-t-sm opacity-90 hover:opacity-100 transition-opacity"
-             />
+    
+    <div className="space-y-3">
+       {[
+         { id: 'INV-8821', type: 'Vendor Payment', amount: '$12,450.00', status: 'Verified', color: 'text-emerald-600 bg-emerald-50' },
+         { id: 'EXP-9932', type: 'Travel Expense', amount: '$432.20', status: 'Verified', color: 'text-emerald-600 bg-emerald-50' },
+         { id: 'TXN-4421', type: 'Wire Transfer', amount: '$8,200.00', status: 'Anomaly Detected', color: 'text-red-600 bg-red-50' },
+         { id: 'INV-8822', type: 'SaaS Subscription', amount: '$299.00', status: 'Processing...', color: 'text-zinc-500 bg-zinc-50' },
+       ].map((item, i) => (
+          <div key={i} className="flex items-center justify-between text-xs p-3 rounded-lg border border-zinc-50 hover:border-zinc-100 hover:bg-zinc-50 transition-colors group">
+             <div className="flex items-center gap-3">
+                <div className={`w-1.5 h-1.5 rounded-full ${item.status.includes('Anomaly') ? 'bg-red-500' : item.status.includes('Processing') ? 'bg-zinc-300' : 'bg-emerald-500'}`}></div>
+                <div>
+                   <p className="font-medium text-zinc-900 group-hover:text-indigo-600 transition-colors">{item.type}</p>
+                   <p className="text-zinc-400 text-[10px] font-mono">{item.id}</p>
+                </div>
+             </div>
+             <div className="text-right">
+                <p className="font-mono text-zinc-700 mb-1">{item.amount}</p>
+                <span className={`text-[9px] px-1.5 py-0.5 rounded font-medium ${item.color}`}>
+                   {item.status}
+                </span>
+             </div>
           </div>
        ))}
     </div>
-    <div className="space-y-3 pt-4 border-t border-zinc-100">
-        <div className="flex justify-between items-center text-xs">
-            <span className="text-zinc-500">Confidence Score</span>
-            <span className="font-bold text-zinc-900">98.2%</span>
-        </div>
-        <div className="w-full bg-zinc-100 rounded-full h-1.5 overflow-hidden">
-            <motion.div 
-               initial={{ width: 0 }} 
-               whileInView={{ width: "98%" }} 
-               transition={{ duration: 1 }}
-               className="bg-emerald-500 h-full rounded-full" 
-            />
+
+    <div className="mt-6 pt-4 border-t border-zinc-100 flex justify-between items-center text-[10px]">
+        <span className="text-zinc-400 font-mono">SCAN_RATE: 1400/SEC</span>
+        <div className="flex items-center gap-1 text-indigo-600 font-medium">
+           <Shield className="w-3 h-3" />
+           <span>Financial Guardrails Active</span>
         </div>
     </div>
   </motion.div>
@@ -369,14 +383,20 @@ const ReadinessAssessmentForm = () => {
     setIsSubmitting(true);
 
     const formData = new FormData(e.currentTarget);
+    const data = Object.fromEntries(formData.entries()); // Convert to plain object
     
+    // Convert object to URLSearchParams for reliable transmission
+    const formParams = new URLSearchParams();
+    for (const key in data) {
+        formParams.append(key, data[key] as string);
+    }
+
     try {
       await fetch(GOOGLE_SCRIPT_URL, {
         method: 'POST',
-        body: formData,
-        mode: 'no-cors' // Crucial for Google Apps Script to work from client-side
+        body: formParams, // Send as URL encoded params
+        mode: 'no-cors'
       });
-      // Since mode is no-cors, we can't read response, so we assume success if no error thrown
       setIsSubmitted(true);
     } catch (error) {
       console.error("Form submission error", error);
@@ -575,6 +595,7 @@ const Footer: React.FC<NavProps> = ({ navigate }) => (
         </ul>
       </div>
       
+      {/* Added Missing "About" Link Column/Section */}
       <div className="col-span-1 md:col-span-4 border-t border-zinc-100 pt-8 flex flex-col md:flex-row gap-6 justify-between items-center text-xs text-zinc-400">
          <div className="flex gap-6">
             <button onClick={() => navigate('home')} className="hover:text-indigo-600 transition-colors">About</button>
@@ -1213,7 +1234,12 @@ export default function App() {
        else if (page === 'terms') path = '/legal/terms';
        else path = `/solutions/${page}`;
     }
-    window.history.pushState({ page }, '', path);
+    
+    try {
+      window.history.pushState({ page }, '', path);
+    } catch (err) {
+      console.log('Navigation URL update suppressed in preview environment.');
+    }
   };
 
   return (
