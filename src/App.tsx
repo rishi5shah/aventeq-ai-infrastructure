@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { 
-  ArrowRight, 
-  CheckCircle2, 
-  ChevronRight, 
-  BarChart3, 
-  Menu, 
-  X, 
-  Zap, 
-  TrendingUp, 
+import TyreMasterPage from './TyreMasterPage';
+import tyremasterPreview from './assets/tyremaster_preview.png';
+import {
+  ArrowRight,
+  CheckCircle2,
+  ChevronRight,
+  BarChart3,
+  Menu,
+  X,
+  Zap,
+  TrendingUp,
   Layers,
   Terminal,
   Code2,
@@ -26,7 +28,7 @@ import {
  */
 
 // --- TYPES ---
-type PageRoute = 'home' | 'finance' | 'logistics' | 'operations' | 'contact' | 'privacy' | 'terms';
+type PageRoute = 'home' | 'finance' | 'logistics' | 'operations' | 'contact' | 'privacy' | 'terms' | 'tyremaster';
 
 interface NavProps {
   currentPage: PageRoute;
@@ -51,6 +53,11 @@ const usePageMetadata = (page: PageRoute) => {
         title: 'Logistics AI Engine | AventeqAI',
         desc: 'Accelerate operational velocity with outcome-driven logistics AI. Predict bottlenecks, optimize routes, and automate global trade.',
         url: '/solutions/logistics'
+      },
+      tyremaster: {
+        title: 'TyreMaster Enterprise | AventeqAI',
+        desc: 'Complete tyre lifecycle management for Indian logistics. Track every kilometer, prevent theft, and secure your inventory.',
+        url: '/solutions/logistics/tyremaster'
       },
       operations: {
         title: 'Programmable Ops | AventeqAI',
@@ -86,7 +93,7 @@ const usePageMetadata = (page: PageRoute) => {
         document.head.appendChild(metaDesc);
       }
       metaDesc.setAttribute('content', data.desc);
-    } catch (e) {}
+    } catch (e) { }
 
     window.scrollTo(0, 0);
   }, [page]);
@@ -95,8 +102,8 @@ const usePageMetadata = (page: PageRoute) => {
 // --- ANIMATION VARIANTS ---
 const fadeInUp = {
   hidden: { opacity: 0, y: 20 },
-  visible: { 
-    opacity: 1, 
+  visible: {
+    opacity: 1,
     y: 0,
     transition: { duration: 0.6, ease: "easeOut" }
   }
@@ -128,12 +135,12 @@ const FadeIn = ({ children, delay = 0, className = "" }: { children: React.React
   );
 };
 
-const SectionShell = ({ 
-  children, 
+const SectionShell = ({
+  children,
   className = "bg-white",
   id
-}: { 
-  children: React.ReactNode; 
+}: {
+  children: React.ReactNode;
   className?: string;
   id?: string;
 }) => (
@@ -156,18 +163,18 @@ const SectionHeading = ({ text, center = false }: { text: string; center?: boole
   </h2>
 );
 
-const Card = ({ 
-  children, 
-  onClick, 
+const Card = ({
+  children,
+  onClick,
   className = "",
   badgeText
-}: { 
-  children: React.ReactNode; 
-  onClick?: () => void; 
+}: {
+  children: React.ReactNode;
+  onClick?: () => void;
   className?: string;
   badgeText?: string;
 }) => (
-  <motion.div 
+  <motion.div
     onClick={onClick}
     whileHover={{ y: -5 }}
     transition={{ type: "spring", stiffness: 300, damping: 20 }}
@@ -189,7 +196,7 @@ const Card = ({
 );
 
 const ButtonPrimary = ({ onClick, text = "[ Start Building ]", fullWidth = false, type = "button", disabled = false }: { onClick?: () => void; text?: string; fullWidth?: boolean; type?: "button" | "submit"; disabled?: boolean }) => (
-  <motion.button 
+  <motion.button
     whileHover={{ scale: disabled ? 1 : 1.02 }}
     whileTap={{ scale: disabled ? 1 : 0.98 }}
     onClick={onClick}
@@ -202,7 +209,7 @@ const ButtonPrimary = ({ onClick, text = "[ Start Building ]", fullWidth = false
 );
 
 const ButtonSecondary = ({ onClick, text }: { onClick: () => void; text: string }) => (
-  <motion.button 
+  <motion.button
     whileHover={{ x: 2 }}
     onClick={onClick}
     className="text-zinc-600 font-medium hover:text-zinc-900 flex items-center gap-2 px-4 py-2 text-sm transition-colors"
@@ -218,9 +225,8 @@ const Navbar: React.FC<NavProps> = ({ currentPage, navigate }) => {
   const navLink = (page: PageRoute, label: string) => (
     <button
       onClick={() => { navigate(page); setIsOpen(false); }}
-      className={`text-sm font-medium transition-colors ${
-        currentPage === page ? 'text-indigo-600 font-semibold' : 'text-zinc-600 hover:text-zinc-900'
-      }`}
+      className={`text-sm font-medium transition-colors ${currentPage === page ? 'text-indigo-600 font-semibold' : 'text-zinc-600 hover:text-zinc-900'
+        }`}
     >
       {label}
     </button>
@@ -265,108 +271,108 @@ const Navbar: React.FC<NavProps> = ({ currentPage, navigate }) => {
 // --- VISUAL COMPONENTS ---
 const TerminalVisual = () => (
   <motion.div variants={fadeInUp} className="hidden md:block bg-zinc-900 rounded-xl p-6 shadow-2xl font-mono text-xs text-zinc-300 border border-zinc-800">
-      <div className="flex gap-2 mb-4 border-b border-zinc-800 pb-4">
-          <div className="w-3 h-3 rounded-full bg-red-500"></div>
-          <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
-          <div className="w-3 h-3 rounded-full bg-green-500"></div>
-      </div>
-      <div className="space-y-2">
-          <p><span className="text-indigo-400">➜</span> <span className="text-emerald-400">~</span> initialize_ops_agent --mode=autonomous</p>
-          <p className="text-zinc-500">Loading modules...</p>
-          <p className="text-zinc-500">Connecting to data warehouse...</p>
-          <p><span className="text-green-400">✔</span> Data ingestion complete (1.2TB)</p>
-          <p><span className="text-green-400">✔</span> Pattern recognition: <span className="text-yellow-400">OPTIMIZED</span></p>
-          <p><span className="text-green-400">✔</span> Workflow automation: <span className="text-yellow-400">ACTIVE</span></p>
-          <p className="animate-pulse">_</p>
-      </div>
+    <div className="flex gap-2 mb-4 border-b border-zinc-800 pb-4">
+      <div className="w-3 h-3 rounded-full bg-red-500"></div>
+      <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
+      <div className="w-3 h-3 rounded-full bg-green-500"></div>
+    </div>
+    <div className="space-y-2">
+      <p><span className="text-indigo-400">➜</span> <span className="text-emerald-400">~</span> initialize_ops_agent --mode=autonomous</p>
+      <p className="text-zinc-500">Loading modules...</p>
+      <p className="text-zinc-500">Connecting to data warehouse...</p>
+      <p><span className="text-green-400">✔</span> Data ingestion complete (1.2TB)</p>
+      <p><span className="text-green-400">✔</span> Pattern recognition: <span className="text-yellow-400">OPTIMIZED</span></p>
+      <p><span className="text-green-400">✔</span> Workflow automation: <span className="text-yellow-400">ACTIVE</span></p>
+      <p className="animate-pulse">_</p>
+    </div>
   </motion.div>
 );
 
 const FinanceVisual = () => (
   <motion.div variants={fadeInUp} className="hidden md:block bg-white rounded-xl p-6 shadow-2xl border border-zinc-100 relative overflow-hidden">
     <div className="flex items-center justify-between mb-6 border-b border-zinc-100 pb-4">
-       <div className="flex items-center gap-3">
-          <div className="p-2 bg-indigo-50 rounded-lg text-indigo-600">
-             <Activity className="w-5 h-5" />
-          </div>
-          <div>
-             <h4 className="text-sm font-bold text-zinc-900">Live Transaction Audit</h4>
-             <p className="text-[10px] text-zinc-500 uppercase tracking-wider font-mono">Real-time Anomaly Detection</p>
-          </div>
-       </div>
-       <div className="flex items-center gap-2">
-          <span className="relative flex h-2 w-2">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-          </span>
-          <span className="text-[10px] font-mono text-emerald-600">ACTIVE</span>
-       </div>
+      <div className="flex items-center gap-3">
+        <div className="p-2 bg-indigo-50 rounded-lg text-indigo-600">
+          <Activity className="w-5 h-5" />
+        </div>
+        <div>
+          <h4 className="text-sm font-bold text-zinc-900">Live Transaction Audit</h4>
+          <p className="text-[10px] text-zinc-500 uppercase tracking-wider font-mono">Real-time Anomaly Detection</p>
+        </div>
+      </div>
+      <div className="flex items-center gap-2">
+        <span className="relative flex h-2 w-2">
+          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+          <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+        </span>
+        <span className="text-[10px] font-mono text-emerald-600">ACTIVE</span>
+      </div>
     </div>
-    
+
     <div className="space-y-3">
-       {[
-         { id: 'INV-8821', type: 'Vendor Payment', amount: '$12,450.00', status: 'Verified', color: 'text-emerald-600 bg-emerald-50' },
-         { id: 'EXP-9932', type: 'Travel Expense', amount: '$432.20', status: 'Verified', color: 'text-emerald-600 bg-emerald-50' },
-         { id: 'TXN-4421', type: 'Wire Transfer', amount: '$8,200.00', status: 'Anomaly Detected', color: 'text-red-600 bg-red-50' },
-         { id: 'INV-8822', type: 'SaaS Subscription', amount: '$299.00', status: 'Processing...', color: 'text-zinc-500 bg-zinc-50' },
-       ].map((item, i) => (
-          <div key={i} className="flex items-center justify-between text-xs p-3 rounded-lg border border-zinc-50 hover:border-zinc-100 hover:bg-zinc-50 transition-colors group">
-             <div className="flex items-center gap-3">
-                <div className={`w-1.5 h-1.5 rounded-full ${item.status.includes('Anomaly') ? 'bg-red-500' : item.status.includes('Processing') ? 'bg-zinc-300' : 'bg-emerald-500'}`}></div>
-                <div>
-                   <p className="font-medium text-zinc-900 group-hover:text-indigo-600 transition-colors">{item.type}</p>
-                   <p className="text-zinc-400 text-[10px] font-mono">{item.id}</p>
-                </div>
-             </div>
-             <div className="text-right">
-                <p className="font-mono text-zinc-700 mb-1">{item.amount}</p>
-                <span className={`text-[9px] px-1.5 py-0.5 rounded font-medium ${item.color}`}>
-                   {item.status}
-                </span>
-             </div>
+      {[
+        { id: 'INV-8821', type: 'Vendor Payment', amount: '$12,450.00', status: 'Verified', color: 'text-emerald-600 bg-emerald-50' },
+        { id: 'EXP-9932', type: 'Travel Expense', amount: '$432.20', status: 'Verified', color: 'text-emerald-600 bg-emerald-50' },
+        { id: 'TXN-4421', type: 'Wire Transfer', amount: '$8,200.00', status: 'Anomaly Detected', color: 'text-red-600 bg-red-50' },
+        { id: 'INV-8822', type: 'SaaS Subscription', amount: '$299.00', status: 'Processing...', color: 'text-zinc-500 bg-zinc-50' },
+      ].map((item, i) => (
+        <div key={i} className="flex items-center justify-between text-xs p-3 rounded-lg border border-zinc-50 hover:border-zinc-100 hover:bg-zinc-50 transition-colors group">
+          <div className="flex items-center gap-3">
+            <div className={`w-1.5 h-1.5 rounded-full ${item.status.includes('Anomaly') ? 'bg-red-500' : item.status.includes('Processing') ? 'bg-zinc-300' : 'bg-emerald-500'}`}></div>
+            <div>
+              <p className="font-medium text-zinc-900 group-hover:text-indigo-600 transition-colors">{item.type}</p>
+              <p className="text-zinc-400 text-[10px] font-mono">{item.id}</p>
+            </div>
           </div>
-       ))}
+          <div className="text-right">
+            <p className="font-mono text-zinc-700 mb-1">{item.amount}</p>
+            <span className={`text-[9px] px-1.5 py-0.5 rounded font-medium ${item.color}`}>
+              {item.status}
+            </span>
+          </div>
+        </div>
+      ))}
     </div>
 
     <div className="mt-6 pt-4 border-t border-zinc-100 flex justify-between items-center text-[10px]">
-        <span className="text-zinc-400 font-mono">SCAN_RATE: 1400/SEC</span>
-        <div className="flex items-center gap-1 text-indigo-600 font-medium">
-           <Shield className="w-3 h-3" />
-           <span>Financial Guardrails Active</span>
-        </div>
+      <span className="text-zinc-400 font-mono">SCAN_RATE: 1400/SEC</span>
+      <div className="flex items-center gap-1 text-indigo-600 font-medium">
+        <Shield className="w-3 h-3" />
+        <span>Financial Guardrails Active</span>
+      </div>
     </div>
   </motion.div>
 );
 
 const LogisticsVisual = () => (
   <motion.div variants={fadeInUp} className="hidden md:block bg-zinc-950 rounded-xl p-6 shadow-2xl border border-zinc-800 text-white relative">
-     <div className="flex items-center justify-between mb-6 border-b border-zinc-800 pb-4">
-        <h4 className="text-sm font-bold flex items-center gap-2"><Layers className="w-4 h-4 text-indigo-500" /> Global Logistics</h4>
-        <span className="text-[10px] font-mono bg-indigo-500/10 text-indigo-400 px-2 py-1 rounded">LIVE_TRACKING</span>
-     </div>
-     <div className="space-y-6 relative pl-2">
-        <div className="absolute left-[13px] top-2 bottom-2 w-0.5 bg-zinc-800"></div>
-        {[
-           { city: 'Singapore Hub', status: 'Departed', time: '04:00Z', active: false },
-           { city: 'Ocean Transit', status: 'In Progress', time: 'Active', active: true },
-           { city: 'Los Angeles Port', status: 'Scheduled', time: '+14h', active: false }
-        ].map((item, i) => (
-           <div key={i} className="flex items-center gap-4 relative z-10">
-              <div className={`w-3 h-3 rounded-full border-2 border-zinc-950 ${item.active ? 'bg-indigo-500 ring-4 ring-indigo-500/20' : 'bg-zinc-700'}`}></div>
-              <div className={`flex-1 flex justify-between items-center p-3 rounded border ${item.active ? 'bg-zinc-900 border-zinc-700' : 'bg-transparent border-transparent'}`}>
-                 <div>
-                    <p className={`text-xs font-bold ${item.active ? 'text-white' : 'text-zinc-500'}`}>{item.city}</p>
-                    <p className="text-[10px] text-zinc-500">{item.status}</p>
-                 </div>
-                 <span className={`text-[10px] font-mono ${item.active ? 'text-indigo-400' : 'text-zinc-600'}`}>{item.time}</span>
-              </div>
-           </div>
-        ))}
-     </div>
-     <div className="mt-6 pt-4 border-t border-zinc-800 flex justify-between items-center text-[10px] text-zinc-500 font-mono">
-        <span>ID: #SHP-8829</span>
-        <span className="flex items-center gap-1 text-emerald-500"><TrendingUp className="w-3 h-3" /> ON TIME</span>
-     </div>
+    <div className="flex items-center justify-between mb-6 border-b border-zinc-800 pb-4">
+      <h4 className="text-sm font-bold flex items-center gap-2"><Layers className="w-4 h-4 text-indigo-500" /> Global Logistics</h4>
+      <span className="text-[10px] font-mono bg-indigo-500/10 text-indigo-400 px-2 py-1 rounded">LIVE_TRACKING</span>
+    </div>
+    <div className="space-y-6 relative pl-2">
+      <div className="absolute left-[13px] top-2 bottom-2 w-0.5 bg-zinc-800"></div>
+      {[
+        { city: 'Singapore Hub', status: 'Departed', time: '04:00Z', active: false },
+        { city: 'Ocean Transit', status: 'In Progress', time: 'Active', active: true },
+        { city: 'Los Angeles Port', status: 'Scheduled', time: '+14h', active: false }
+      ].map((item, i) => (
+        <div key={i} className="flex items-center gap-4 relative z-10">
+          <div className={`w-3 h-3 rounded-full border-2 border-zinc-950 ${item.active ? 'bg-indigo-500 ring-4 ring-indigo-500/20' : 'bg-zinc-700'}`}></div>
+          <div className={`flex-1 flex justify-between items-center p-3 rounded border ${item.active ? 'bg-zinc-900 border-zinc-700' : 'bg-transparent border-transparent'}`}>
+            <div>
+              <p className={`text-xs font-bold ${item.active ? 'text-white' : 'text-zinc-500'}`}>{item.city}</p>
+              <p className="text-[10px] text-zinc-500">{item.status}</p>
+            </div>
+            <span className={`text-[10px] font-mono ${item.active ? 'text-indigo-400' : 'text-zinc-600'}`}>{item.time}</span>
+          </div>
+        </div>
+      ))}
+    </div>
+    <div className="mt-6 pt-4 border-t border-zinc-800 flex justify-between items-center text-[10px] text-zinc-500 font-mono">
+      <span>ID: #SHP-8829</span>
+      <span className="flex items-center gap-1 text-emerald-500"><TrendingUp className="w-3 h-3" /> ON TIME</span>
+    </div>
   </motion.div>
 );
 
@@ -384,11 +390,11 @@ const ReadinessAssessmentForm = () => {
 
     const formData = new FormData(e.currentTarget);
     const data = Object.fromEntries(formData.entries()); // Convert to plain object
-    
+
     // Convert object to URLSearchParams for reliable transmission
     const formParams = new URLSearchParams();
     for (const key in data) {
-        formParams.append(key, data[key] as string);
+      formParams.append(key, data[key] as string);
     }
 
     try {
@@ -409,12 +415,12 @@ const ReadinessAssessmentForm = () => {
   const InputField = ({ label, name, type = "text", placeholder, required = false }: any) => (
     <div className="mb-4">
       <label className="block text-xs font-semibold text-zinc-500 mb-1 font-mono uppercase tracking-wide">{label}</label>
-      <input 
+      <input
         name={name}
-        type={type} 
+        type={type}
         required={required}
-        className="w-full bg-white border border-zinc-300 rounded-md p-3 text-zinc-900 placeholder:text-zinc-400 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-shadow" 
-        placeholder={placeholder} 
+        className="w-full bg-white border border-zinc-300 rounded-md p-3 text-zinc-900 placeholder:text-zinc-400 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-shadow"
+        placeholder={placeholder}
       />
     </div>
   );
@@ -436,18 +442,18 @@ const ReadinessAssessmentForm = () => {
   const TextAreaField = ({ label, name, placeholder, rows = 3 }: any) => (
     <div className="mb-6">
       <label className="block text-xs font-semibold text-zinc-500 mb-1 font-mono uppercase tracking-wide">{label}</label>
-      <textarea 
+      <textarea
         name={name}
         rows={rows}
-        className="w-full bg-white border border-zinc-300 rounded-md p-3 text-zinc-900 placeholder:text-zinc-400 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-shadow" 
-        placeholder={placeholder} 
+        className="w-full bg-white border border-zinc-300 rounded-md p-3 text-zinc-900 placeholder:text-zinc-400 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-shadow"
+        placeholder={placeholder}
       ></textarea>
     </div>
   );
 
   if (isSubmitted) {
     return (
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         className="bg-white border border-zinc-200 rounded-xl p-8 text-center"
@@ -471,7 +477,7 @@ const ReadinessAssessmentForm = () => {
           Request Assessment
         </h3>
         <p className="text-sm text-zinc-500">
-           A practical assessment to identify where AI can deliver real business impact.
+          A practical assessment to identify where AI can deliver real business impact.
         </p>
       </div>
 
@@ -482,47 +488,47 @@ const ReadinessAssessmentForm = () => {
         </div>
         <InputField label="Company" name="Company" placeholder="Company Name Ltd." required />
 
-        <SelectField 
-          label="Target Architecture" 
+        <SelectField
+          label="Target Architecture"
           name="Target_Architecture"
-          options={['Finance', 'Logistics & Supply Chain', 'Operations', 'Full Stack / Multiple', 'Not sure']} 
+          options={['Finance', 'Logistics & Supply Chain', 'Operations', 'Full Stack / Multiple', 'Not sure']}
         />
-        
-        <SelectField 
-          label="Primary Objective" 
+
+        <SelectField
+          label="Primary Objective"
           name="Primary_Objective"
-          options={['Improve efficiency / automation', 'Better forecasting', 'Cost reduction', 'Decision support', 'Visibility & Control']} 
+          options={['Improve efficiency / automation', 'Better forecasting', 'Cost reduction', 'Decision support', 'Visibility & Control']}
         />
 
-        <SelectField 
-          label="Current Data Maturity" 
+        <SelectField
+          label="Current Data Maturity"
           name="Data_Maturity"
-          options={['Fragmented / Siloed', 'Partially Structured', 'Centralized / Warehouse', 'Unsure']} 
+          options={['Fragmented / Siloed', 'Partially Structured', 'Centralized / Warehouse', 'Unsure']}
         />
 
-        <SelectField 
-          label="AI Experience Level" 
+        <SelectField
+          label="AI Experience Level"
           name="AI_Experience"
-          options={['No prior experience', 'Limited experimentation', 'Active production use']} 
+          options={['No prior experience', 'Limited experimentation', 'Active production use']}
         />
 
-        <SelectField 
-          label="Deployment Timeline" 
+        <SelectField
+          label="Deployment Timeline"
           name="Timeline"
-          options={['Immediately', '3–6 Months', 'Exploratory']} 
+          options={['Immediately', '3–6 Months', 'Exploratory']}
         />
 
-        <TextAreaField 
-           label="Success Criteria"
-           name="Success_Criteria"
-           placeholder="Describe your ideal outcome..."
+        <TextAreaField
+          label="Success Criteria"
+          name="Success_Criteria"
+          placeholder="Describe your ideal outcome..."
         />
 
-        <ButtonPrimary 
-          type="submit" 
-          text={isSubmitting ? "[ Transmitting... ]" : "[ Request Assessment ]"} 
-          fullWidth 
-          disabled={isSubmitting} 
+        <ButtonPrimary
+          type="submit"
+          text={isSubmitting ? "[ Transmitting... ]" : "[ Request Assessment ]"}
+          fullWidth
+          disabled={isSubmitting}
         />
         <p className="text-[10px] text-center text-zinc-400 mt-4 font-mono">
           NO OBLIGATION. SECURE TRANSMISSION.
@@ -539,7 +545,7 @@ const Footer: React.FC<NavProps> = ({ navigate }) => (
       <div className="col-span-1 md:col-span-1">
         <div className="flex items-center gap-2 mb-6">
           <div className="w-6 h-6 bg-indigo-600 rounded-lg flex items-center justify-center">
-             <Cpu className="w-3 h-3 text-white" />
+            <Cpu className="w-3 h-3 text-white" />
           </div>
           <span className="text-xl font-bold tracking-tight">AventeqAI</span>
         </div>
@@ -550,7 +556,7 @@ const Footer: React.FC<NavProps> = ({ navigate }) => (
           © {new Date().getFullYear()} AventeqAI.
         </div>
       </div>
-      
+
       <div>
         <h4 className="font-bold text-zinc-900 mb-6 text-sm">Solutions</h4>
         <ul className="space-y-3">
@@ -566,7 +572,7 @@ const Footer: React.FC<NavProps> = ({ navigate }) => (
           <img src="https://flagcdn.com/w40/in.png" alt="India" className="w-5 h-auto rounded-sm opacity-90" /> Vadodara, India
         </p>
         <p className="text-zinc-400 text-xs leading-relaxed mb-4 pl-7">
-          Tech Park One, Suite 404<br/>
+          Tech Park One, Suite 404<br />
           Vadodara, Gujarat 390007
         </p>
       </div>
@@ -574,35 +580,35 @@ const Footer: React.FC<NavProps> = ({ navigate }) => (
       <div>
         <h4 className="font-bold text-zinc-900 mb-6 text-sm">Global Offices</h4>
         <ul className="space-y-4">
-           <li>
-              <p className="text-zinc-500 text-sm font-medium flex items-center gap-2">
-                <img src="https://flagcdn.com/w40/gb.png" alt="UK" className="w-5 h-auto rounded-sm opacity-90" /> London
-              </p>
-              <p className="text-zinc-400 text-xs pl-7">Canary Wharf, Level 39</p>
-           </li>
-           <li>
-              <p className="text-zinc-500 text-sm font-medium flex items-center gap-2">
-                <img src="https://flagcdn.com/w40/sg.png" alt="Singapore" className="w-5 h-auto rounded-sm opacity-90" /> Singapore
-              </p>
-              <p className="text-zinc-400 text-xs pl-7">Marina Bay Financial Ctr</p>
-           </li>
-           <li>
-              <p className="text-zinc-500 text-sm font-medium flex items-center gap-2">
-                <img src="https://flagcdn.com/w40/ca.png" alt="Canada" className="w-5 h-auto rounded-sm opacity-90" /> Canada
-              </p>
-              <p className="text-zinc-400 text-xs pl-7">Toronto, Ontario</p>
-           </li>
+          <li>
+            <p className="text-zinc-500 text-sm font-medium flex items-center gap-2">
+              <img src="https://flagcdn.com/w40/gb.png" alt="UK" className="w-5 h-auto rounded-sm opacity-90" /> London
+            </p>
+            <p className="text-zinc-400 text-xs pl-7">Canary Wharf, Level 39</p>
+          </li>
+          <li>
+            <p className="text-zinc-500 text-sm font-medium flex items-center gap-2">
+              <img src="https://flagcdn.com/w40/sg.png" alt="Singapore" className="w-5 h-auto rounded-sm opacity-90" /> Singapore
+            </p>
+            <p className="text-zinc-400 text-xs pl-7">Marina Bay Financial Ctr</p>
+          </li>
+          <li>
+            <p className="text-zinc-500 text-sm font-medium flex items-center gap-2">
+              <img src="https://flagcdn.com/w40/ca.png" alt="Canada" className="w-5 h-auto rounded-sm opacity-90" /> Canada
+            </p>
+            <p className="text-zinc-400 text-xs pl-7">Toronto, Ontario</p>
+          </li>
         </ul>
       </div>
-      
+
       {/* Added Missing "About" Link Column/Section */}
       <div className="col-span-1 md:col-span-4 border-t border-zinc-100 pt-8 flex flex-col md:flex-row gap-6 justify-between items-center text-xs text-zinc-400">
-         <div className="flex gap-6">
-            <button onClick={() => navigate('home')} className="hover:text-indigo-600 transition-colors">About</button>
-            <button onClick={() => navigate('privacy')} className="hover:text-indigo-600 transition-colors">Privacy Policy</button>
-            <button onClick={() => navigate('terms')} className="hover:text-indigo-600 transition-colors">Terms of Service</button>
-         </div>
-         <p>System Status: <span className="text-emerald-500 font-medium">Operational</span></p>
+        <div className="flex gap-6">
+          <button onClick={() => navigate('home')} className="hover:text-indigo-600 transition-colors">About</button>
+          <button onClick={() => navigate('privacy')} className="hover:text-indigo-600 transition-colors">Privacy Policy</button>
+          <button onClick={() => navigate('terms')} className="hover:text-indigo-600 transition-colors">Terms of Service</button>
+        </div>
+        <p>System Status: <span className="text-emerald-500 font-medium">Operational</span></p>
       </div>
     </div>
   </footer>
@@ -620,7 +626,7 @@ const PrivacyPage: React.FC<NavProps> = ({ navigate }) => (
         <p>
           At AventeqAI, we treat data privacy as a fundamental component of our infrastructure. This policy outlines how we handle data during AI model training, development, and deployment.
         </p>
-        
+
         <h3 className="text-zinc-900 font-bold mt-8 mb-4">1. Data Collection & Usage</h3>
         <p>We collect information necessary to provide our AI consultancy services, including:</p>
         <ul className="list-disc pl-5 space-y-2 mb-4">
@@ -653,11 +659,11 @@ const TermsPage: React.FC<NavProps> = ({ navigate }) => (
         <p>
           These Terms of Service govern your use of AventeqAI's consultancy services and AI infrastructure solutions. By engaging with our services, you agree to these terms.
         </p>
-        
+
         <h3 className="text-zinc-900 font-bold mt-8 mb-4">1. Intellectual Property</h3>
         <p>
           <strong>Custom Models:</strong> Any bespoke AI models trained exclusively on your proprietary data are owned by you.
-          <br/>
+          <br />
           <strong>Platform IP:</strong> AventeqAI retains ownership of our underlying frameworks, pre-trained base models, and deployment infrastructure code.
         </p>
 
@@ -683,26 +689,26 @@ const HomePage: React.FC<NavProps> = ({ navigate }) => {
     <div className="bg-white">
       {/* Hero Section */}
       <SectionShell className="pt-24 pb-20 md:pt-32 md:pb-24">
-        <motion.div 
+        <motion.div
           initial="hidden"
           animate="visible"
           variants={staggerContainer}
           className="max-w-4xl mx-auto text-center flex flex-col items-center"
         >
           {/* Badge removed */}
-          
+
           <motion.h1 variants={fadeInUp} className="text-4xl md:text-6xl font-bold text-zinc-900 tracking-tight leading-[1.1] mb-6">
             Custom AI Infrastructure Built for <span className="text-indigo-600">Measurable Business Growth</span>
           </motion.h1>
-          
+
           <motion.p variants={fadeInUp} className="text-lg md:text-xl text-zinc-500 max-w-2xl leading-relaxed mb-10">
             Stop experimenting and start scaling. We build custom, production-ready AI systems designed to automate complexity and unlock new revenue streams.
           </motion.p>
-          
+
           <motion.div variants={fadeInUp} className="flex flex-col items-center gap-6 mb-16">
             <div className="flex flex-col sm:flex-row gap-4 items-center">
               <ButtonPrimary onClick={() => navigate('contact')} text="[ Start Building ]" />
-              <ButtonSecondary onClick={() => window.scrollTo({ top: 800, behavior: 'smooth'})} text="View the Framework" />
+              <ButtonSecondary onClick={() => window.scrollTo({ top: 800, behavior: 'smooth' })} text="View the Framework" />
             </div>
             <p className="text-xs text-zinc-400 font-mono">Powering outcomes for the next generation of industry leaders.</p>
           </motion.div>
@@ -725,9 +731,9 @@ const HomePage: React.FC<NavProps> = ({ navigate }) => {
               { name: "NIPPON Express", url: "https://logo.clearbit.com/nipponexpress.com" }
             ].map((logo, i) => (
               <div key={i} className="group flex flex-col items-center gap-2 cursor-default">
-                <img 
-                  src={logo.url} 
-                  alt={logo.name} 
+                <img
+                  src={logo.url}
+                  alt={logo.name}
                   className="h-8 w-auto grayscale opacity-40 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-500"
                   onError={(e) => {
                     (e.target as HTMLImageElement).style.display = 'none';
@@ -745,162 +751,162 @@ const HomePage: React.FC<NavProps> = ({ navigate }) => {
       {/* Services Section */}
       <SectionShell className="bg-white border-t border-zinc-100">
         <FadeIn>
-            <Badge text="Capabilities" />
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
-              <SectionHeading text="Three AI verticals. One delivery partner." />
-              <p className="text-zinc-500 max-w-md pb-6 text-sm leading-relaxed">
-                AventeqAI focuses on the AI capabilities that create real operational and commercial impact.
+          <Badge text="Capabilities" />
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+            <SectionHeading text="Three AI verticals. One delivery partner." />
+            <p className="text-zinc-500 max-w-md pb-6 text-sm leading-relaxed">
+              AventeqAI focuses on the AI capabilities that create real operational and commercial impact.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+            <Card onClick={() => navigate('contact')} badgeText="STRATEGY">
+              <h3 className="text-lg font-bold text-zinc-900 mb-2 group-hover:text-indigo-600 transition-colors">AI Strategy & Discovery</h3>
+              <p className="text-zinc-600 text-sm leading-relaxed mb-4">
+                Identify where AI delivers the greatest value. We assess data, workflows, and objectives to define a clear roadmap.
               </p>
+            </Card>
+
+            <Card onClick={() => navigate('operations')} badgeText="DEVELOPMENT">
+              <h3 className="text-lg font-bold text-zinc-900 mb-2 group-hover:text-indigo-600 transition-colors">Custom AI Development</h3>
+              <p className="text-zinc-600 text-sm leading-relaxed mb-4">
+                We design and build bespoke AI solutions tailored to your business — from early prototypes to production-ready systems.
+              </p>
+            </Card>
+
+            <Card onClick={() => navigate('logistics')} badgeText="AUTOMATION">
+              <h3 className="text-lg font-bold text-zinc-900 mb-2 group-hover:text-indigo-600 transition-colors">AI Optimisation</h3>
+              <p className="text-zinc-600 text-sm leading-relaxed mb-4">
+                We apply AI to automate workflows, optimise operations and improve decision-making — reducing manual effort.
+              </p>
+            </Card>
+          </div>
+
+          <div className="text-center">
+            <div className="inline-flex flex-col md:flex-row gap-4 md:gap-8 text-sm font-medium text-zinc-600">
+              <button onClick={() => navigate('finance')} className="hover:text-indigo-600 transition-colors">Explore the Financial Layer →</button>
+              <button onClick={() => navigate('logistics')} className="hover:text-indigo-600 transition-colors">View Logistics Infrastructure →</button>
+              <button onClick={() => navigate('operations')} className="hover:text-indigo-600 transition-colors">See Programmable Ops →</button>
             </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-              <Card onClick={() => navigate('contact')} badgeText="STRATEGY">
-                <h3 className="text-lg font-bold text-zinc-900 mb-2 group-hover:text-indigo-600 transition-colors">AI Strategy & Discovery</h3>
-                <p className="text-zinc-600 text-sm leading-relaxed mb-4">
-                  Identify where AI delivers the greatest value. We assess data, workflows, and objectives to define a clear roadmap.
-                </p>
-              </Card>
-
-              <Card onClick={() => navigate('operations')} badgeText="DEVELOPMENT">
-                <h3 className="text-lg font-bold text-zinc-900 mb-2 group-hover:text-indigo-600 transition-colors">Custom AI Development</h3>
-                <p className="text-zinc-600 text-sm leading-relaxed mb-4">
-                  We design and build bespoke AI solutions tailored to your business — from early prototypes to production-ready systems.
-                </p>
-              </Card>
-
-              <Card onClick={() => navigate('logistics')} badgeText="AUTOMATION">
-                <h3 className="text-lg font-bold text-zinc-900 mb-2 group-hover:text-indigo-600 transition-colors">AI Optimisation</h3>
-                <p className="text-zinc-600 text-sm leading-relaxed mb-4">
-                  We apply AI to automate workflows, optimise operations and improve decision-making — reducing manual effort.
-                </p>
-              </Card>
-            </div>
-
-            <div className="text-center">
-               <div className="inline-flex flex-col md:flex-row gap-4 md:gap-8 text-sm font-medium text-zinc-600">
-                  <button onClick={() => navigate('finance')} className="hover:text-indigo-600 transition-colors">Explore the Financial Layer →</button>
-                  <button onClick={() => navigate('logistics')} className="hover:text-indigo-600 transition-colors">View Logistics Infrastructure →</button>
-                  <button onClick={() => navigate('operations')} className="hover:text-indigo-600 transition-colors">See Programmable Ops →</button>
-               </div>
-            </div>
+          </div>
         </FadeIn>
       </SectionShell>
 
-       {/* Outcomes Section */}
-       <SectionShell className="bg-zinc-50 border-y border-zinc-200">
+      {/* Outcomes Section */}
+      <SectionShell className="bg-zinc-50 border-y border-zinc-200">
         <FadeIn>
-            <div className="flex flex-col md:flex-row justify-between md:items-end mb-12 gap-6">
-                <div>
-                    <SectionHeading text="Engineered for measurable impact" />
-                </div>
-                <p className="text-zinc-500 max-w-md pb-6 text-sm leading-relaxed">
-                    We prioritise AI initiatives that deliver measurable improvements to performance, efficiency and decision-making.
-                </p>
+          <div className="flex flex-col md:flex-row justify-between md:items-end mb-12 gap-6">
+            <div>
+              <SectionHeading text="Engineered for measurable impact" />
             </div>
+            <p className="text-zinc-500 max-w-md pb-6 text-sm leading-relaxed">
+              We prioritise AI initiatives that deliver measurable improvements to performance, efficiency and decision-making.
+            </p>
+          </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                {[
-                    { title: 'Operational Efficiency', icon: Zap, desc: 'Reduce manual effort and cycle times by automating repetitive and error-prone processes.', link: 'operations', linkText: 'View Programmable Ops' },
-                    { title: 'Better Decision-Making', icon: TrendingUp, desc: 'Use AI-driven insights and predictive intelligence to support faster decisions.', link: 'finance', linkText: 'View Financial Layer' },
-                    { title: 'Cost Reduction', icon: BarChart3, desc: 'Lower operational costs through optimisation, automation and improved resource allocation.', link: 'logistics', linkText: 'View Logistics Engine' },
-                    { title: 'Scalable AI Systems', icon: Layers, desc: 'Build AI solutions that grow with your organisation and adapt as needs change.', link: 'contact', linkText: 'Start Building' }
-                ].map((item, i) => (
-                    <Card key={i} onClick={() => navigate(item.link as PageRoute)} className="flex flex-col h-full hover:border-slate-400">
-                        <div className="w-10 h-10 bg-indigo-50 rounded-lg flex items-center justify-center text-indigo-600 mb-4">
-                            <item.icon className="w-5 h-5" />
-                        </div>
-                        <h4 className="text-lg font-bold text-zinc-900 mb-3">{item.title}</h4>
-                        <p className="text-zinc-500 text-sm leading-relaxed mb-6 flex-grow">{item.desc}</p>
-                        <div className="text-xs text-indigo-600 font-bold tracking-wider text-left mt-auto flex items-center gap-1 group">
-                            {item.linkText} <ChevronRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-                        </div>
-                    </Card>
-                ))}
-            </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[
+              { title: 'Operational Efficiency', icon: Zap, desc: 'Reduce manual effort and cycle times by automating repetitive and error-prone processes.', link: 'operations', linkText: 'View Programmable Ops' },
+              { title: 'Better Decision-Making', icon: TrendingUp, desc: 'Use AI-driven insights and predictive intelligence to support faster decisions.', link: 'finance', linkText: 'View Financial Layer' },
+              { title: 'Cost Reduction', icon: BarChart3, desc: 'Lower operational costs through optimisation, automation and improved resource allocation.', link: 'logistics', linkText: 'View Logistics Engine' },
+              { title: 'Scalable AI Systems', icon: Layers, desc: 'Build AI solutions that grow with your organisation and adapt as needs change.', link: 'contact', linkText: 'Start Building' }
+            ].map((item, i) => (
+              <Card key={i} onClick={() => navigate(item.link as PageRoute)} className="flex flex-col h-full hover:border-slate-400">
+                <div className="w-10 h-10 bg-indigo-50 rounded-lg flex items-center justify-center text-indigo-600 mb-4">
+                  <item.icon className="w-5 h-5" />
+                </div>
+                <h4 className="text-lg font-bold text-zinc-900 mb-3">{item.title}</h4>
+                <p className="text-zinc-500 text-sm leading-relaxed mb-6 flex-grow">{item.desc}</p>
+                <div className="text-xs text-indigo-600 font-bold tracking-wider text-left mt-auto flex items-center gap-1 group">
+                  {item.linkText} <ChevronRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+                </div>
+              </Card>
+            ))}
+          </div>
         </FadeIn>
       </SectionShell>
 
       {/* How We Work */}
       <SectionShell className="bg-white">
         <FadeIn>
-            <Badge text="Delivery_Framework" />
-            <SectionHeading text="A simple AI delivery framework that scales" />
-            
-            <div className="grid md:grid-cols-3 gap-8 relative mt-16">
-                <div className="hidden md:block absolute top-12 left-0 right-0 h-px bg-zinc-100 -z-10"></div>
-                
-                {[
-                    { 
-                        num: '01', 
-                        title: 'Discover & Align', 
-                        desc: 'We start by understanding your business goals, constraints, and data.',
-                    },
-                    { 
-                        num: '02', 
-                        title: 'Build & Validate', 
-                        desc: 'We design and build tailored AI solutions using rapid prototyping.',
-                    },
-                    { 
-                        num: '03', 
-                        title: 'Deploy & Scale', 
-                        desc: 'We deploy AI solutions into live environments with monitoring.',
-                    }
-                ].map((step, i) => (
-                    <div key={i} className="bg-white pr-4">
-                        <div className="text-4xl font-mono font-bold text-indigo-100 mb-6 bg-white inline-block pr-4">0{i+1}</div>
-                        <h3 className="text-lg font-bold text-zinc-900 mb-2">{step.title}</h3>
-                        <p className="text-zinc-500 text-sm leading-relaxed">{step.desc}</p>
-                    </div>
-                ))}
-            </div>
+          <Badge text="Delivery_Framework" />
+          <SectionHeading text="A simple AI delivery framework that scales" />
+
+          <div className="grid md:grid-cols-3 gap-8 relative mt-16">
+            <div className="hidden md:block absolute top-12 left-0 right-0 h-px bg-zinc-100 -z-10"></div>
+
+            {[
+              {
+                num: '01',
+                title: 'Discover & Align',
+                desc: 'We start by understanding your business goals, constraints, and data.',
+              },
+              {
+                num: '02',
+                title: 'Build & Validate',
+                desc: 'We design and build tailored AI solutions using rapid prototyping.',
+              },
+              {
+                num: '03',
+                title: 'Deploy & Scale',
+                desc: 'We deploy AI solutions into live environments with monitoring.',
+              }
+            ].map((step, i) => (
+              <div key={i} className="bg-white pr-4">
+                <div className="text-4xl font-mono font-bold text-indigo-100 mb-6 bg-white inline-block pr-4">0{i + 1}</div>
+                <h3 className="text-lg font-bold text-zinc-900 mb-2">{step.title}</h3>
+                <p className="text-zinc-500 text-sm leading-relaxed">{step.desc}</p>
+              </div>
+            ))}
+          </div>
         </FadeIn>
       </SectionShell>
 
       {/* Final CTA */}
       <SectionShell className="bg-zinc-50 border-t border-zinc-200">
         <FadeIn>
-            <div className="grid md:grid-cols-2 gap-16 items-start">
-                <div>
-                    <Badge text="Start_Building" />
-                    <h2 className="text-3xl md:text-4xl font-bold text-zinc-900 mb-6 tracking-tight">Ready to build with AI?</h2>
-                    <p className="text-zinc-500 text-lg mb-12 leading-relaxed">
-                        Book a free strategy call and we’ll help you identify where AI can deliver the greatest impact across your business.
-                    </p>
-                    
-                    {/* Highlighted Assessment Card */}
-                    <div className="bg-white p-8 rounded-xl border border-zinc-200 shadow-lg relative overflow-hidden group hover:border-indigo-300 transition-colors">
-                       <div className="absolute top-0 right-0 p-4 opacity-5 pointer-events-none">
-                          <Code2 className="w-32 h-32 text-indigo-600" />
-                       </div>
-                       <div className="relative z-10">
-                          <div className="w-12 h-12 bg-indigo-50 rounded-lg flex items-center justify-center mb-6 text-indigo-600">
-                             <Code2 className="w-6 h-6" />
-                          </div>
-                          <h3 className="text-xl font-bold text-zinc-900 mb-4">
-                             AI Readiness Assessment
-                          </h3>
-                          <p className="text-zinc-600 text-sm leading-relaxed mb-6">
-                             Most organisations want to use AI — but few know where to start. We identify the most practical, high-impact AI opportunities based on your data.
-                          </p>
-                          <div className="space-y-3 border-t border-zinc-100 pt-6">
-                             <p className="text-xs font-mono text-zinc-400 uppercase tracking-widest mb-3">What you get:</p>
-                             {[
-                               'Data Maturity Audit', 
-                               'High-Impact Use Case Mapping', 
-                               'Implementation Roadmap & ROI'
-                             ].map((item, i) => (
-                                <div key={i} className="flex items-center gap-3 text-sm text-zinc-700 font-medium">
-                                   <CheckCircle2 className="w-4 h-4 text-indigo-500 flex-shrink-0" /> 
-                                   {item}
-                                </div>
-                             ))}
-                          </div>
-                       </div>
-                    </div>
+          <div className="grid md:grid-cols-2 gap-16 items-start">
+            <div>
+              <Badge text="Start_Building" />
+              <h2 className="text-3xl md:text-4xl font-bold text-zinc-900 mb-6 tracking-tight">Ready to build with AI?</h2>
+              <p className="text-zinc-500 text-lg mb-12 leading-relaxed">
+                Book a free strategy call and we’ll help you identify where AI can deliver the greatest impact across your business.
+              </p>
+
+              {/* Highlighted Assessment Card */}
+              <div className="bg-white p-8 rounded-xl border border-zinc-200 shadow-lg relative overflow-hidden group hover:border-indigo-300 transition-colors">
+                <div className="absolute top-0 right-0 p-4 opacity-5 pointer-events-none">
+                  <Code2 className="w-32 h-32 text-indigo-600" />
                 </div>
-                
-                <ReadinessAssessmentForm />
+                <div className="relative z-10">
+                  <div className="w-12 h-12 bg-indigo-50 rounded-lg flex items-center justify-center mb-6 text-indigo-600">
+                    <Code2 className="w-6 h-6" />
+                  </div>
+                  <h3 className="text-xl font-bold text-zinc-900 mb-4">
+                    AI Readiness Assessment
+                  </h3>
+                  <p className="text-zinc-600 text-sm leading-relaxed mb-6">
+                    Most organisations want to use AI — but few know where to start. We identify the most practical, high-impact AI opportunities based on your data.
+                  </p>
+                  <div className="space-y-3 border-t border-zinc-100 pt-6">
+                    <p className="text-xs font-mono text-zinc-400 uppercase tracking-widest mb-3">What you get:</p>
+                    {[
+                      'Data Maturity Audit',
+                      'High-Impact Use Case Mapping',
+                      'Implementation Roadmap & ROI'
+                    ].map((item, i) => (
+                      <div key={i} className="flex items-center gap-3 text-sm text-zinc-700 font-medium">
+                        <CheckCircle2 className="w-4 h-4 text-indigo-500 flex-shrink-0" />
+                        {item}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
             </div>
+
+            <ReadinessAssessmentForm />
+          </div>
         </FadeIn>
       </SectionShell>
     </div>
@@ -908,20 +914,21 @@ const HomePage: React.FC<NavProps> = ({ navigate }) => {
 };
 
 // --- USE CASE TEMPLATE COMPONENT ---
-const UseCasePage = ({ 
+const UseCasePage = ({
   eyebrow,
-  title, 
-  subtitle, 
-  intro, 
+  title,
+  subtitle,
+  intro,
   challenges,
   solutions,
   outcomes,
   ctaText,
   links,
   navigate,
-  visualVariant
+  visualVariant,
+  featuredProduct
 }: any) => {
-  
+
   const renderVisual = () => {
     switch (visualVariant) {
       case 'terminal': return <TerminalVisual />;
@@ -933,122 +940,149 @@ const UseCasePage = ({
 
   return (
     <div className="bg-white pt-20">
-       {/* Hero */}
-       <SectionShell className="bg-white">
-          <motion.div initial="hidden" animate="visible" variants={staggerContainer} className="grid md:grid-cols-2 gap-12 items-center">
-              <div>
-                  {/* Breadcrumb and Badge removed as requested */}
-                  
-                  <motion.h1 variants={fadeInUp} className="text-4xl md:text-5xl font-bold text-zinc-900 mb-6 tracking-tight">{title}</motion.h1>
-                  <motion.p variants={fadeInUp} className="text-lg text-zinc-500 mb-8 leading-relaxed">{subtitle}</motion.p>
-                  <motion.div variants={fadeInUp} className="flex flex-col sm:flex-row gap-4 mb-12">
-                      <ButtonPrimary onClick={() => navigate('contact')} text={ctaText} />
-                  </motion.div>
-              </div>
+      {/* Hero */}
+      <SectionShell className="bg-white">
+        <motion.div initial="hidden" animate="visible" variants={staggerContainer} className="grid md:grid-cols-2 gap-12 items-center">
+          <div>
+            {/* Breadcrumb and Badge removed as requested */}
 
-              {/* Dynamic Visual */}
-              {visualVariant && renderVisual()}
-          </motion.div>
-       </SectionShell>
+            <motion.h1 variants={fadeInUp} className="text-4xl md:text-5xl font-bold text-zinc-900 mb-6 tracking-tight">{title}</motion.h1>
+            <motion.p variants={fadeInUp} className="text-lg text-zinc-500 mb-8 leading-relaxed">{subtitle}</motion.p>
+            <motion.div variants={fadeInUp} className="flex flex-col sm:flex-row gap-4 mb-12">
+              <ButtonPrimary onClick={() => navigate('contact')} text={ctaText} />
+            </motion.div>
+          </div>
 
-        {/* Challenges Section */}
-        <SectionShell className="bg-zinc-50 border-y border-zinc-200">
-           <FadeIn>
-               <div className="flex flex-col md:flex-row gap-12">
-                   <div className="md:w-1/3">
-                       <Badge text="System_Diagnostics" />
-                       <h2 className="text-2xl font-bold text-zinc-900 mb-4 tracking-tight">Identified Constraints</h2>
-                       <p className="text-zinc-500 text-sm">
-                           Common structural challenges we detect in legacy systems.
-                       </p>
-                   </div>
-                   <div className="md:w-2/3 grid gap-4">
-                       {challenges && challenges.map((item: string, i: number) => (
-                           <div key={i} className="flex items-center gap-4 p-4 border border-zinc-200 rounded bg-white shadow-sm hover:border-red-200 transition-colors">
-                               <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0" />
-                               <span className="text-zinc-700 font-medium text-sm">{item}</span>
-                           </div>
-                       ))}
-                   </div>
-               </div>
-           </FadeIn>
-       </SectionShell>
+          {/* Dynamic Visual */}
+          {visualVariant && renderVisual()}
+        </motion.div>
+      </SectionShell>
 
-       {/* Solutions Grid */}
-       <SectionShell>
-           <FadeIn>
-               <div className="flex flex-col md:flex-row justify-between items-end mb-12">
-                   <div className="max-w-xl">
-                       <Badge text="System_Modules" />
-                       <SectionHeading text="Engineered for Performance" />
-                       <p className="text-zinc-500 text-sm">{intro}</p>
-                   </div>
-               </div>
-               
-               <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-8">
-                   {solutions && solutions.map((sol: any, i: number) => (
-                       <Card key={i} className="bg-white shadow-sm" badgeText={`MODULE_0${i+1}`}>
-                           <h3 className="text-lg font-bold text-zinc-900 mb-2">{sol.title}</h3>
-                           <p className="text-zinc-600 text-sm leading-relaxed mb-4">
-                             {sol.desc}
-                           </p>
-                           <div className="flex gap-2 flex-wrap mt-4">
-                               {sol.cases.map((c: string, j: number) => (
-                                   <span key={j} className="text-[10px] bg-zinc-50 text-zinc-500 border border-zinc-200 px-2 py-1 rounded font-mono">
-                                     {c}
-                                   </span>
-                               ))}
-                           </div>
-                       </Card>
-                   ))}
-               </div>
-           </FadeIn>
-       </SectionShell>
-
-       {/* Outcomes Section */}
-       <SectionShell className="bg-zinc-50 border-y border-zinc-200">
-          <FadeIn>
-              <SectionHeading text="Performance Metrics" />
-              <div className="grid md:grid-cols-4 gap-6 mt-8">
-                  {outcomes && outcomes.map((o: any, i: number) => (
-                      <div key={i} className="bg-white p-6 rounded-xl border border-zinc-200 shadow-sm">
-                          <div className="text-indigo-600 mb-3"><BarChart3 className="w-5 h-5" /></div>
-                          <h4 className="text-zinc-900 font-bold mb-2 text-sm">{o.label}</h4>
-                          <p className="text-zinc-500 text-xs leading-relaxed">{o.desc}</p>
-                      </div>
-                  ))}
-              </div>
-          </FadeIn>
-       </SectionShell>
-
-       {/* Delivery Approach */}
-        <SectionShell className="bg-white">
-            <FadeIn>
-                <Badge text="Deployment_Protocol" />
-                <SectionHeading text="Implementation Lifecycle" />
-                <div className="grid md:grid-cols-4 gap-4 mt-8">
-                    {['Audit & Map', 'Architect', 'Build & Integrate', 'Deploy & Scale'].map((step, i) => (
-                        <div key={i} className="border-t-2 border-indigo-100 pt-4">
-                            <span className="text-xs font-mono text-indigo-500 block mb-2">PHASE_0{i+1}</span>
-                            <h4 className="font-bold text-zinc-900">{step}</h4>
-                        </div>
-                    ))}
+      {/* Challenges Section */}
+      <SectionShell className="bg-zinc-50 border-y border-zinc-200">
+        <FadeIn>
+          <div className="flex flex-col md:flex-row gap-12">
+            <div className="md:w-1/3">
+              <Badge text="System_Diagnostics" />
+              <h2 className="text-2xl font-bold text-zinc-900 mb-4 tracking-tight">Identified Constraints</h2>
+              <p className="text-zinc-500 text-sm">
+                Common structural challenges we detect in legacy systems.
+              </p>
+            </div>
+            <div className="md:w-2/3 grid gap-4">
+              {challenges && challenges.map((item: string, i: number) => (
+                <div key={i} className="flex items-center gap-4 p-4 border border-zinc-200 rounded bg-white shadow-sm hover:border-red-200 transition-colors">
+                  <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0" />
+                  <span className="text-zinc-700 font-medium text-sm">{item}</span>
                 </div>
-            </FadeIn>
-        </SectionShell>
+              ))}
+            </div>
+          </div>
+        </FadeIn>
+      </SectionShell>
 
-       {/* CTA */}
-       <SectionShell>
+      {/* Solutions Grid */}
+      <SectionShell>
+        <FadeIn>
+          <div className="flex flex-col md:flex-row justify-between items-end mb-12">
+            <div className="max-w-xl">
+              <Badge text="System_Modules" />
+              <SectionHeading text="Engineered for Performance" />
+              <p className="text-zinc-500 text-sm">{intro}</p>
+            </div>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-8">
+            {solutions && solutions.map((sol: any, i: number) => (
+              <Card key={i} className="bg-white shadow-sm" badgeText={`MODULE_0${i + 1}`}>
+                <h3 className="text-lg font-bold text-zinc-900 mb-2">{sol.title}</h3>
+                <p className="text-zinc-600 text-sm leading-relaxed mb-4">
+                  {sol.desc}
+                </p>
+                <div className="flex gap-2 flex-wrap mt-4">
+                  {sol.cases.map((c: string, j: number) => (
+                    <span key={j} className="text-[10px] bg-zinc-50 text-zinc-500 border border-zinc-200 px-2 py-1 rounded font-mono">
+                      {c}
+                    </span>
+                  ))}
+                </div>
+              </Card>
+            ))}
+          </div>
+        </FadeIn>
+      </SectionShell>
+
+      {/* Featured Product Section */}
+      {featuredProduct && (
+        <SectionShell className="bg-indigo-50 border-y border-indigo-100">
           <FadeIn>
-              <div className="text-center max-w-3xl mx-auto">
-                 <h2 className="text-3xl font-bold text-zinc-900 mb-6 tracking-tight">Ready to upgrade your infrastructure?</h2>
-                 <div className="flex justify-center flex-col items-center gap-4">
-                     <ButtonPrimary onClick={() => navigate('contact')} text={ctaText} />
-                     <button onClick={() => navigate(links.secondaryLink)} className="text-zinc-500 hover:text-zinc-900 text-sm font-medium">Or view {links.secondaryText} →</button>
-                 </div>
+            <div className="flex flex-col md:flex-row gap-12 items-center">
+              <div className="md:w-1/2">
+                <Badge text={featuredProduct.badge} />
+                <h2 className="text-3xl font-bold text-zinc-900 mb-4 tracking-tight">{featuredProduct.title}</h2>
+                <p className="text-zinc-600 text-sm leading-relaxed mb-6">{featuredProduct.description}</p>
+                <ul className="space-y-3 mb-8">
+                  {featuredProduct.highlights.map((h: string, i: number) => (
+                    <li key={i} className="flex items-center gap-3 text-sm text-zinc-700">
+                      <CheckCircle2 className="w-5 h-5 text-indigo-600 flex-shrink-0" />
+                      {h}
+                    </li>
+                  ))}
+                </ul>
+                <ButtonPrimary onClick={() => navigate(featuredProduct.link)} text={featuredProduct.ctaText} />
               </div>
+              <div className="md:w-1/2 bg-white p-6 rounded-xl shadow-lg border border-indigo-100">
+                <img src={featuredProduct.image} alt={featuredProduct.title} className="w-full h-auto rounded-lg" />
+              </div>
+            </div>
           </FadeIn>
-       </SectionShell>
+        </SectionShell>
+      )}
+
+      {/* Outcomes Section */}
+      <SectionShell className="bg-zinc-50 border-y border-zinc-200">
+        <FadeIn>
+          <SectionHeading text="Performance Metrics" />
+          <div className="grid md:grid-cols-4 gap-6 mt-8">
+            {outcomes && outcomes.map((o: any, i: number) => (
+              <div key={i} className="bg-white p-6 rounded-xl border border-zinc-200 shadow-sm">
+                <div className="text-indigo-600 mb-3"><BarChart3 className="w-5 h-5" /></div>
+                <h4 className="text-zinc-900 font-bold mb-2 text-sm">{o.label}</h4>
+                <p className="text-zinc-500 text-xs leading-relaxed">{o.desc}</p>
+              </div>
+            ))}
+          </div>
+        </FadeIn>
+      </SectionShell>
+
+      {/* Delivery Approach */}
+      <SectionShell className="bg-white">
+        <FadeIn>
+          <Badge text="Deployment_Protocol" />
+          <SectionHeading text="Implementation Lifecycle" />
+          <div className="grid md:grid-cols-4 gap-4 mt-8">
+            {['Audit & Map', 'Architect', 'Build & Integrate', 'Deploy & Scale'].map((step, i) => (
+              <div key={i} className="border-t-2 border-indigo-100 pt-4">
+                <span className="text-xs font-mono text-indigo-500 block mb-2">PHASE_0{i + 1}</span>
+                <h4 className="font-bold text-zinc-900">{step}</h4>
+              </div>
+            ))}
+          </div>
+        </FadeIn>
+      </SectionShell>
+
+      {/* CTA */}
+      <SectionShell>
+        <FadeIn>
+          <div className="text-center max-w-3xl mx-auto">
+            <h2 className="text-3xl font-bold text-zinc-900 mb-6 tracking-tight">Ready to upgrade your infrastructure?</h2>
+            <div className="flex justify-center flex-col items-center gap-4">
+              <ButtonPrimary onClick={() => navigate('contact')} text={ctaText} />
+              <button onClick={() => navigate(links.secondaryLink)} className="text-zinc-500 hover:text-zinc-900 text-sm font-medium">Or view {links.secondaryText} →</button>
+            </div>
+          </div>
+        </FadeIn>
+      </SectionShell>
     </div>
   );
 };
@@ -1056,7 +1090,7 @@ const UseCasePage = ({
 // --- USE CASE DATA INJECTION ---
 
 const FinancePage = ({ navigate }: any) => (
-  <UseCasePage 
+  <UseCasePage
     navigate={navigate}
     eyebrow="FINANCIAL_OPS_LAYER"
     title="The Outcome-First AI Layer for Modern Financial Operations"
@@ -1082,7 +1116,7 @@ const FinancePage = ({ navigate }: any) => (
 );
 
 const LogisticsPage = ({ navigate }: any) => (
-  <UseCasePage 
+  <UseCasePage
     navigate={navigate}
     eyebrow="GLOBAL_SUPPLY_CHAIN_API"
     title="Accelerate Operational Velocity with Outcome-Driven Logistics AI"
@@ -1090,7 +1124,7 @@ const LogisticsPage = ({ navigate }: any) => (
     intro="Logistics teams operate in complex environments. AventeqAI helps organisations apply AI to planning and execution for better control."
     ctaText="[ Build Your Logistics Engine ]"
     links={{ secondaryText: 'Programmable Ops', secondaryLink: 'operations' }}
-    visualVariant="logistics" // Specific visual
+    visualVariant="logistics"
     challenges={['Demand volatility and inaccurate forecasting', 'Overstocking and excess inventory', 'Limited end-to-end visibility', 'Reactive decision-making', 'Rising transport costs']}
     solutions={[
       { title: 'AI Demand Forecasting', desc: 'Use machine learning to predict demand patterns more accurately enabling better planning.', cases: ['S&OP planning', 'Seasonal forecasting'] },
@@ -1104,11 +1138,25 @@ const LogisticsPage = ({ navigate }: any) => (
       { label: 'Reduced Waste', desc: 'Balance inventory to avoid shortages.' },
       { label: 'Greater Resilience', desc: 'Anticipate disruption earlier.' }
     ]}
+    featuredProduct={{
+      badge: 'FEATURED_PRODUCT',
+      title: 'TyreMaster Enterprise',
+      description: 'The complete tyre lifecycle management platform built for Indian logistics. Track every kilometre, prevent theft, and protect your valuable assets with real-time monitoring and intelligent alerts.',
+      highlights: [
+        'Real-time tyre tracking and lifecycle management',
+        'Theft prevention with geofencing and alerts',
+        'Visual tyre mapping for your entire fleet',
+        'Inventory & asset protection for jacks, toolkits and more'
+      ],
+      ctaText: '[ Explore TyreMaster ]',
+      link: 'tyremaster',
+      image: tyremasterPreview
+    }}
   />
 );
 
 const OperationsPage = ({ navigate }: any) => (
-  <UseCasePage 
+  <UseCasePage
     navigate={navigate}
     eyebrow="PROGRAMMABLE_OPS"
     title="Programmable AI Systems Engineered to Automate Operational Complexity"
@@ -1135,71 +1183,71 @@ const OperationsPage = ({ navigate }: any) => (
 
 // CONTACT / STRATEGY CALL PAGE
 const ContactPage: React.FC<NavProps> = ({ navigate }) => {
-    return (
-        <div className="bg-white min-h-screen pt-20">
-             <SectionShell className="max-w-4xl mx-auto">
-                <div className="grid md:grid-cols-2 gap-12 items-start">
-                  <div>
-                    <Badge text="Start_Building" />
-                    <h1 className="text-4xl font-bold text-zinc-900 mb-6 tracking-tight">Contact Us</h1>
-                    <p className="text-xl text-zinc-500 mb-8 leading-relaxed">
-                        Ready to start your AI transformation? Reach out to our global team.
-                    </p>
-                    
-                    {/* Office Locations Block */}
-                    <div className="space-y-8">
-                       <div>
-                          <h4 className="flex items-center gap-2 font-bold text-zinc-900 mb-3">
-                             <CheckCircle2 className="w-5 h-5 text-indigo-600" /> Headquarters
-                          </h4>
-                          <div className="pl-7 text-sm text-zinc-600">
-                             <p className="font-medium flex items-center gap-2 mb-1">
-                               <img src="https://flagcdn.com/w40/in.png" alt="India" className="w-5 h-auto rounded-sm opacity-90" /> Vadodara, India
-                             </p>
-                             <p className="text-zinc-500 leading-relaxed pl-7">Tech Park One, Suite 404<br/>Vadodara, Gujarat 390007</p>
-                          </div>
-                       </div>
-                       
-                       <div>
-                          <h4 className="flex items-center gap-2 font-bold text-zinc-900 mb-3">
-                             <CheckCircle2 className="w-5 h-5 text-indigo-600" /> Global Offices
-                          </h4>
-                          <div className="pl-7 space-y-4 text-sm text-zinc-600">
-                             <div>
-                                <p className="font-medium flex items-center gap-2 mb-1">
-                                  <img src="https://flagcdn.com/w40/gb.png" alt="UK" className="w-5 h-auto rounded-sm opacity-90" /> London, UK
-                                </p>
-                                <p className="text-zinc-500 pl-7">Canary Wharf, Level 39</p>
-                             </div>
-                             <div>
-                                <p className="font-medium flex items-center gap-2 mb-1">
-                                  <img src="https://flagcdn.com/w40/sg.png" alt="Singapore" className="w-5 h-auto rounded-sm opacity-90" /> Singapore
-                                </p>
-                                <p className="text-zinc-500 pl-7">Marina Bay Financial Centre</p>
-                             </div>
-                             <div>
-                                <p className="font-medium flex items-center gap-2 mb-1">
-                                  <img src="https://flagcdn.com/w40/ca.png" alt="Canada" className="w-5 h-auto rounded-sm opacity-90" /> Canada
-                                </p>
-                                <p className="text-zinc-400 text-xs pl-7">Toronto, Ontario</p>
-                             </div>
-                          </div>
-                       </div>
+  return (
+    <div className="bg-white min-h-screen pt-20">
+      <SectionShell className="max-w-4xl mx-auto">
+        <div className="grid md:grid-cols-2 gap-12 items-start">
+          <div>
+            <Badge text="Start_Building" />
+            <h1 className="text-4xl font-bold text-zinc-900 mb-6 tracking-tight">Contact Us</h1>
+            <p className="text-xl text-zinc-500 mb-8 leading-relaxed">
+              Ready to start your AI transformation? Reach out to our global team.
+            </p>
 
-                       <div>
-                          <h4 className="flex items-center gap-2 font-bold text-zinc-900 mb-3">
-                             <ArrowRight className="w-5 h-5 text-indigo-600" /> Email
-                          </h4>
-                          <p className="pl-7 text-sm text-indigo-600 font-medium">hello@aventeqai.com</p>
-                       </div>
-                    </div>
-                  </div>
-                  
-                  <ReadinessAssessmentForm />
+            {/* Office Locations Block */}
+            <div className="space-y-8">
+              <div>
+                <h4 className="flex items-center gap-2 font-bold text-zinc-900 mb-3">
+                  <CheckCircle2 className="w-5 h-5 text-indigo-600" /> Headquarters
+                </h4>
+                <div className="pl-7 text-sm text-zinc-600">
+                  <p className="font-medium flex items-center gap-2 mb-1">
+                    <img src="https://flagcdn.com/w40/in.png" alt="India" className="w-5 h-auto rounded-sm opacity-90" /> Vadodara, India
+                  </p>
+                  <p className="text-zinc-500 leading-relaxed pl-7">Tech Park One, Suite 404<br />Vadodara, Gujarat 390007</p>
                 </div>
-             </SectionShell>
+              </div>
+
+              <div>
+                <h4 className="flex items-center gap-2 font-bold text-zinc-900 mb-3">
+                  <CheckCircle2 className="w-5 h-5 text-indigo-600" /> Global Offices
+                </h4>
+                <div className="pl-7 space-y-4 text-sm text-zinc-600">
+                  <div>
+                    <p className="font-medium flex items-center gap-2 mb-1">
+                      <img src="https://flagcdn.com/w40/gb.png" alt="UK" className="w-5 h-auto rounded-sm opacity-90" /> London, UK
+                    </p>
+                    <p className="text-zinc-500 pl-7">Canary Wharf, Level 39</p>
+                  </div>
+                  <div>
+                    <p className="font-medium flex items-center gap-2 mb-1">
+                      <img src="https://flagcdn.com/w40/sg.png" alt="Singapore" className="w-5 h-auto rounded-sm opacity-90" /> Singapore
+                    </p>
+                    <p className="text-zinc-500 pl-7">Marina Bay Financial Centre</p>
+                  </div>
+                  <div>
+                    <p className="font-medium flex items-center gap-2 mb-1">
+                      <img src="https://flagcdn.com/w40/ca.png" alt="Canada" className="w-5 h-auto rounded-sm opacity-90" /> Canada
+                    </p>
+                    <p className="text-zinc-400 text-xs pl-7">Toronto, Ontario</p>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <h4 className="flex items-center gap-2 font-bold text-zinc-900 mb-3">
+                  <ArrowRight className="w-5 h-5 text-indigo-600" /> Email
+                </h4>
+                <p className="pl-7 text-sm text-indigo-600 font-medium">hello@aventeqai.com</p>
+              </div>
+            </div>
+          </div>
+
+          <ReadinessAssessmentForm />
         </div>
-    );
+      </SectionShell>
+    </div>
+  );
 };
 
 // --- APP ROOT ---
@@ -1208,6 +1256,18 @@ export default function App() {
   const [currentPage, setCurrentPage] = useState<PageRoute>('home');
 
   usePageMetadata(currentPage); // UPDATED HOOK
+
+  // INITIAL LOAD ROUTER
+  useEffect(() => {
+    const path = window.location.pathname;
+    if (path.includes('/solutions/finance')) setCurrentPage('finance');
+    else if (path.includes('/solutions/logistics/tyremaster')) setCurrentPage('tyremaster');
+    else if (path.includes('/solutions/logistics')) setCurrentPage('logistics');
+    else if (path.includes('/solutions/operations')) setCurrentPage('operations');
+    else if (path.includes('/contact')) setCurrentPage('contact');
+    else if (path.includes('/legal/privacy')) setCurrentPage('privacy');
+    else if (path.includes('/legal/terms')) setCurrentPage('terms');
+  }, []);
 
   // UPDATED NAVIGATION LOGIC FOR CLEAN URLs
   useEffect(() => {
@@ -1225,16 +1285,17 @@ export default function App() {
   const navigate = (page: PageRoute) => {
     setCurrentPage(page);
     window.scrollTo(0, 0);
-    
+
     // Simulate Next.js Router Push
     let path = '/';
     if (page !== 'home') {
-       if (page === 'contact') path = '/contact';
-       else if (page === 'privacy') path = '/legal/privacy';
-       else if (page === 'terms') path = '/legal/terms';
-       else path = `/solutions/${page}`;
+      if (page === 'contact') path = '/contact';
+      else if (page === 'privacy') path = '/legal/privacy';
+      else if (page === 'terms') path = '/legal/terms';
+      else if (page === 'tyremaster') path = '/solutions/logistics/tyremaster';
+      else path = `/solutions/${page}`;
     }
-    
+
     try {
       window.history.pushState({ page }, '', path);
     } catch (err) {
@@ -1245,11 +1306,12 @@ export default function App() {
   return (
     <div className="bg-white min-h-screen font-sans text-zinc-900 selection:bg-indigo-100 selection:text-indigo-900">
       <Navbar currentPage={currentPage} navigate={navigate} />
-      
+
       <main>
         {currentPage === 'home' && <HomePage currentPage={currentPage} navigate={navigate} />}
         {currentPage === 'finance' && <FinancePage navigate={navigate} />}
         {currentPage === 'logistics' && <LogisticsPage navigate={navigate} />}
+        {currentPage === 'tyremaster' && <TyreMasterPage navigate={navigate} />}
         {currentPage === 'operations' && <OperationsPage navigate={navigate} />}
         {currentPage === 'contact' && <ContactPage currentPage={currentPage} navigate={navigate} />}
         {currentPage === 'privacy' && <PrivacyPage currentPage={currentPage} navigate={navigate} />}
